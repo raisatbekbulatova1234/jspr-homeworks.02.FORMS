@@ -32,9 +32,9 @@ public class Server {
 
     private void connect(Socket socket) {
         try (socket;
-        final var in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        final var out = new BufferedOutputStream(socket.getOutputStream())
-            ) {
+             final var in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+             final var out = new BufferedOutputStream(socket.getOutputStream())
+        ) {
             final var requestLine = in.readLine();
             final var parts = requestLine.split(" ");
 
@@ -42,7 +42,12 @@ public class Server {
                 return;
             }
 
-            final var path = parts[1];
+            final var pathAndQuery = parts[1];
+            System.out.println("Параметры");
+            var parsResultParams = Request.getQueryParams(pathAndQuery);
+            var path = Request.getQueryParamsPath(pathAndQuery);
+            System.out.println(parsResultParams);
+            System.out.println(path);
             if (!validPaths.contains(path)) {
                 out.write((
                         "HTTP/1.1 404 Not Found\r\n" +
